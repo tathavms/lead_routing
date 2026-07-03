@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Ticket Router</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Smart Ticket Router</h1>
+        <p class="subtitle">Describe your issue and we'll route you to the right team</p>
+
+        <div class="form-box">
+            <textarea 
+                id="ticketInput" 
+                placeholder="Describe your issue here..."
+                rows="6"
+            ></textarea>
+            <button id="submitBtn" onclick="submitTicket()">Submit Ticket</button>
+        </div>
+
+        <!-- result shows up here -->
+        <div id="result" class="result hidden"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
