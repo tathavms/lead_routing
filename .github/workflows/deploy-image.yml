@@ -1,0 +1,66 @@
+# handles building the container image and instructing EC2 to pull and run it
+name: Build and Deploy FastAPI Container Image
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'models/routing_model/model.safetensors'
+      - 'models/spam_detection_model/model.safetensors'
+      - '*.ipynb'
+      - '*.csv'
+      - 'README.md'
+      - '.gitignore'
+      - 'data/'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Execute Remote SSH Commands on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GHCR_TOKEN
+          script: |
+            docker login ghcr.io -u tathavms -p $GHCR_TOKEN
+            docker pull ghcr.io/${{ github.repository }}:latest
+            docker rm -f lead_routing || true
+            docker run -d \
+              --name lead_routing \
+              -p 8000:8000 \
+              -e ROOT_PATH=/lead-routing \
+              -v /home/ec2-user/lead_routing_customer_support/models/routing_model/model.safetensors:/app/models/routing_model/model.safetensors \
+              -v /home/ec2-user/lead_routing_customer_support/models/spam_detection_model/model.safetensors:/app/models/spam_detection_model/model.safetensors \
+              --restart unless-stopped \
+              ghcr.io/${{ github.repository }}:latest
+            docker image prune -f

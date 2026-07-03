@@ -1,0 +1,54 @@
+# handles uploading large model weight files to s3 and pulling them down to ec2
+name: Sync Model Weights to S3 and EC2
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      # only triggers when one of the actual weight files changes
+      - 'models/routing_model/model.safetensors'
+      - 'models/spam_detection_model/model.safetensors'
+
+jobs:
+  sync-assets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code with LFS
+        uses: actions/checkout@v4
+        with:
+          lfs: true  # pulls actual file bytes from lfs, not just the pointer text file
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Upload Both Model Weight Files to S3
+        run: |
+          aws s3 cp models/routing_model/model.safetensors s3://github-lfs-assets/lead-routing/routing_model/model.safetensors
+          aws s3 cp models/spam_detection_model/model.safetensors s3://github-lfs-assets/lead-routing/spam_detection_model/model.safetensors
+
+      - name: Pull Model Weights from S3 to EC2 and Restart Container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # creating the nested model folders on ec2 if they don't exist yet
+            mkdir -p /home/ec2-user/lead_routing_customer_support/models/routing_model
+            mkdir -p /home/ec2-user/lead_routing_customer_support/models/spam_detection_model
+
+            # downloading both weight files from s3 to ec2 host disk
+            # these paths match the volume mounts in deploy_image.yml
+            aws s3 cp s3://github-lfs-assets/lead-routing/routing_model/model.safetensors \
+              /home/ec2-user/lead_routing_customer_support/models/routing_model/model.safetensors
+
+            aws s3 cp s3://github-lfs-assets/lead-routing/spam_detection_model/model.safetensors \
+              /home/ec2-user/lead_routing_customer_support/models/spam_detection_model/model.safetensors
+
+            # restarting container so it picks up the new weights via the volume mount
+            docker restart lead_routing
