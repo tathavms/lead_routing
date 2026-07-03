@@ -5,8 +5,11 @@ from predict import is_spam, predict_department
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
+import os
 
-app = FastAPI(title="Lead Routing Customer Support", root_path="/lead-routing")
+
+ROOT_PATH = os.getenv("ROOT_PATH", "")
+app = FastAPI(title="Lead Routing Customer Support", root_path=ROOT_PATH)
 
 # allowing frontend to talk to api
 app.add_middleware(

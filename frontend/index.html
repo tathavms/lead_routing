@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Ticket Router</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- served by fastapi static mount at /static/style.css -->
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
@@ -20,9 +21,9 @@
             <button id="submitBtn" onclick="submitTicket()">Submit Ticket</button>
         </div>
 
-        <!-- result shows up here -->
         <div id="result" class="result hidden"></div>
     </div>
-    <script src="script.js"></script>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>

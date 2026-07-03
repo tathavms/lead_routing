@@ -1,5 +1,7 @@
-// pointing to local api during dev — will change to aws url after deploy
-const API_URL = "http://13.48.162.241/lead-routing";
+// automatically uses correct url based on where its running
+const API_URL = window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000" 
+    : "http://13.48.162.241/lead-routing";
 
 async function submitTicket() {
     const text = document.getElementById("ticketInput").value.trim();
