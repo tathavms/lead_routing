@@ -1,5 +1,5 @@
 // pointing to local api during dev — will change to aws url after deploy
-const API_URL = "http://localhost:8000";
+const API_URL = "http://13.48.162.241/lead-routing";
 
 async function submitTicket() {
     const text = document.getElementById("ticketInput").value.trim();

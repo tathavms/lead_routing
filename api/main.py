@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from schemas import TicketRequest, TicketResponse
 from predict import is_spam, predict_department
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
 
-app = FastAPI()
+app = FastAPI(title="Lead Routing Customer Support", root_path="/lead-routing")
 
 # allowing frontend to talk to api
 app.add_middleware(
@@ -12,6 +15,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# serving frontend static files — html, css, js
+BASE_DIR = Path(__file__).resolve().parent.parent
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "frontend")), name="static")
+
+# serving index.html at root
+@app.get("/")
+def home():
+    return FileResponse(str(BASE_DIR / "frontend" / "index.html"))
+
+# health check
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 # prediction endpoint
 @app.post("/predict", response_model=TicketResponse)
