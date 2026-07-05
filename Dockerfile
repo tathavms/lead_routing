@@ -19,7 +19,11 @@ WORKDIR /app
 COPY --from=builder /root/.local /root/.local
 
 #Copying the specific execution code and lightweight layout files into the container. We intentionally leave out model.safetensors so it doesn't bloat the image(Limited EC2 space).
+# copying api code
 COPY ./app ./app
+# copying frontend
+COPY ./frontend ./frontend
+
 COPY ./models/routing_model/config.json ./models/routing_model/config.json
 COPY ./models/routing_model/queue_mapping.pkl ./models/routing_model/queue_mapping.pkl
 COPY ./models/routing_model/tokenizer_config.json ./models/routing_model/tokenizer_config.json
