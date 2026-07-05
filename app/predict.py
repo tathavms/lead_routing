@@ -1,6 +1,5 @@
 import pickle
 import torch
-import string
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
 
 # loading spam model artifacts
