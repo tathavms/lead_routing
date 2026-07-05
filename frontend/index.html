@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Ticket Router</title>
-    <!-- served by fastapi static mount at /static/style.css -->
-    <link rel="stylesheet" href="static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Ticket Router</title>
+  <link rel="stylesheet" href="static/style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Smart Ticket Router</h1>
-        <p class="subtitle">Describe your issue and we'll route you to the right team</p>
+  <main class="container">
+    <h1>Smart Ticket Router</h1>
+    <p class="subtitle">Describe your issue and we’ll route you to the right team.</p>
 
-        <div class="form-box">
-            <textarea 
-                id="ticketInput" 
-                placeholder="Describe your issue here..."
-                rows="6"
-            ></textarea>
-            <button id="submitBtn" onclick="submitTicket()">Submit Ticket</button>
-        </div>
+    <section class="form-box">
+      <label for="ticketInput" class="input-label">Support request</label>
+      <textarea
+        id="ticketInput"
+        placeholder="Example: I was charged twice for my subscription and need a refund."
+        rows="6"
+      ></textarea>
 
-        <div id="result" class="result hidden"></div>
-    </div>
+      <button id="submitBtn" onclick="submitTicket()">Submit Ticket</button>
+    </section>
 
-    <script src="static/script.js"></script>
+    <div id="result" class="result hidden" aria-live="polite"></div>
+  </main>
+
+  <script src="static/script.js"></script>
 </body>
 </html>
