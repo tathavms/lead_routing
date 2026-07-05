@@ -1,20 +1,24 @@
 import pickle
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).resolve().parent
+MODEL_PATH = CURRENT_DIR / ".." / "models"
 
 # loading spam model artifacts
-spam_config    = AutoConfig.from_pretrained('../models/spam_detection_model')
-spam_tokenizer = AutoTokenizer.from_pretrained('../models/spam_detection_model')
-spam_model     = AutoModelForSequenceClassification.from_pretrained('../models/spam_detection_model')
+spam_config    = AutoConfig.from_pretrained(MODEL_PATH / 'spam_detection_model')
+spam_tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH / 'spam_detection_model')
+spam_model     = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH / 'spam_detection_model')
 spam_model.eval()
 
 # loading routing model artifacts
-with open(f'../models/routing_model/queue_mapping.pkl', 'rb') as f:
+with open(MODEL_PATH / 'routing_model/queue_mapping.pkl', 'rb') as f:
     queue_mapping=pickle.load(f)
 
 id_to_queue = {v: k for k, v in queue_mapping.items()}
-tokenizer      = AutoTokenizer.from_pretrained('../models/routing_model')
-routing_model  = AutoModelForSequenceClassification.from_pretrained('../models/routing_model')
+tokenizer      = AutoTokenizer.from_pretrained(MODEL_PATH / 'routing_model')
+routing_model  = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH / 'routing_model')
 routing_model.eval()
 
 # checking if input is spam using transformer model

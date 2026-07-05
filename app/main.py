@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from schemas import TicketRequest, TicketResponse
-from predict import is_spam, predict_department
+from .schemas import TicketRequest, TicketResponse
+from .predict import is_spam, predict_department
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
