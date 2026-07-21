@@ -7,23 +7,51 @@
   <link rel="stylesheet" href="static/style.css" />
 </head>
 <body>
-  <main class="container">
-    <h1>Smart Ticket Router</h1>
-    <p class="subtitle">Describe your issue and we’ll route you to the right team.</p>
+  <div class="page">
+    <div class="theme-row">
+      <button id="themeToggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Toggle dark mode">
+        <span class="theme-knob">
+          <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="5" fill="#f59e0b"/>
+            <g stroke="#f59e0b" stroke-width="2" stroke-linecap="round">
+              <line x1="12" y1="1" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="23"/>
+              <line x1="1" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="23" y2="12"/>
+              <line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/>
+              <line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/>
+              <line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/>
+              <line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/>
+            </g>
+          </svg>
+          <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3a9 9 0 109 9 7 7 0 01-9-9z" fill="#cbd5e1"/>
+          </svg>
+        </span>
+      </button>
+    </div>
 
-    <section class="form-box">
-      <label for="ticketInput" class="input-label">Support request</label>
-      <textarea
-        id="ticketInput"
-        placeholder="Example: I was charged twice for my subscription and need a refund."
-        rows="6"
-      ></textarea>
+    <main class="container">
+      <h1>Smart Ticket Router</h1>
+      <p class="subtitle">Describe your issue and we'll route you to the right team.</p>
 
-      <button id="submitBtn" onclick="submitTicket()">Submit Ticket</button>
-    </section>
+      <section class="form-box">
+        <div class="label-row">
+          <label for="ticketInput" class="input-label">Support request</label>
+          <button id="clearBtn" class="clear-btn" aria-label="Clear input">Clear</button>
+        </div>
+        <textarea
+          id="ticketInput"
+          placeholder="Example: I was charged twice for my subscription and need a refund."
+          rows="6"
+        ></textarea>
 
-    <div id="result" class="result hidden" aria-live="polite"></div>
-  </main>
+        <button id="submitBtn" onclick="submitTicket()">Submit Ticket</button>
+      </section>
+
+      <div id="result" class="result hidden" aria-live="polite"></div>
+    </main>
+  </div>
 
   <script src="static/script.js"></script>
 </body>
